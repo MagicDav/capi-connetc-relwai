@@ -1,76 +1,43 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
-
-const prisma = new PrismaClient();
-
+import passageirosRoutes from "../src/routes/passageiros.routes";
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
+import { SerialPort } from "serialport";
+// Porta serial onde o Arduino está conectado
+// Verifique no Arduino IDE (Ferramentas > Porta)
+const portName = "COM3"; // altere se necessário (ex: "COM4" ou "/dev/ttyUSB0")
 
-app.get("/todos", async (req, res) => {
-  const todos = await prisma.todo.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-
-  res.json(todos);
+// Inicializa a conexão serial
+export const arduino = new SerialPort({
+  path: portName,
+  baudRate: 9600, // precisa ser o mesmo do Arduino
 });
 
-app.post("/todos", async (req, res) => {
-  const todo = await prisma.todo.create({
-    data: {
-      completed: false,
-      createdAt: new Date(),
-      text: req.body.text ?? "Empty todo",
-    },
-  });
+arduino.on("open", () => console.log(`✅ Conectado ao Arduino em ${portName}`));
+arduino.on("error", (err) => console.error("❌ Erro na porta serial:", err.message));
 
-  return res.json(todo);
-});
-
-app.get("/todos/:id", async (req, res) => {
-  const id = req.params.id;
-  const todo = await prisma.todo.findUnique({
-    where: { id },
-  });
-
-  return res.json(todo);
-});
-
-app.put("/todos/:id", async (req, res) => {
-  const id = req.params.id;
-  const todo = await prisma.todo.update({
-    where: { id },
-    data: req.body,
-  });
-
-  return res.json(todo);
-});
-
-app.delete("/todos/:id", async (req, res) => {
-  const id = req.params.id;
-  await prisma.todo.delete({
-    where: { id },
-  });
-
-  return res.send({ status: "ok" });
-});
-
+// Define routes
 app.get("/", async (req, res) => {
   res.send(
     `
-  <h1>Todo REST API</h1>
+  <h1>🚀Connect REST API</h1>
   <h2>Available Routes</h2>
   <pre>
-    GET, POST /todos
-    GET, PUT, DELETE /todos/:id
+    GET, POST /passageiros
+    GET, PUT, DELETE /passageiros/:id
   </pre>
   `.trim(),
   );
 });
 
+// Import and use passageiros routes
+app.use("/api/passageiros", passageirosRoutes);
+
+
 app.listen(Number(port), "0.0.0.0", () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Connect app listening at http://localhost:${port}`);
 });

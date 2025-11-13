@@ -10,9 +10,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Todo {
+model passageiros {
   id        String   @id @default(uuid())
+  nome      String
+  destino   String
+  morada    String
+  qrcode    String
+  status Boolean
   createdAt DateTime @default(now())
-  text      String
-  completed Boolean
 }

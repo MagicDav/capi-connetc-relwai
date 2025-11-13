@@ -2,7 +2,6 @@ import QRCode from "qrcode";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { arduino } from "../index";
 
 const prisma = new PrismaClient();
 
@@ -51,19 +50,16 @@ export const validarQRCode = async (req: Request, res: Response) => {
     const { qrcode } = req.body;
 
     if (!qrcode) {
-      arduino.write("0");
       return res.status(400).json({ error: "QR Code é obrigatório" });
     }
 
     const passageiro = await prisma.passageiros.findFirst({ where: { qrcode } });
 
     if (!passageiro) {
-      arduino.write("0");
       return res.status(404).json({ error: "QR Code não existe ou é inválido" }); 
     }
 
     if (passageiro.status) {
-      arduino.write("0");
       return res.status(400).json({ error: "QR Code já utilizado" });
     }
 
@@ -71,17 +67,9 @@ export const validarQRCode = async (req: Request, res: Response) => {
       where: { id: passageiro.id },
       data: { status: true },
     });
-
-    arduino.write("1", (err: any) => {
-      if (err) {
-        arduino.write("0");
-        return res.status(500).json({ error: "Falha ao enviar comando ao Arduino" });
-      }
       res.json({ success: true, message: "Catraca aberta!", passageiro });
-    });
   } catch (error: any) {
     console.error(error);
-    arduino.write("0");
     res.status(500).json({ error: error.message });
   }
 };

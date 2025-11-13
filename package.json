@@ -1,8 +1,8 @@
 {
   "name": "expressjs-prisma",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "Jake Runzer",
+  "main": "dist/index.j",
+  "author": "Domingos Bernardo Kalepa",
   "license": "MIT",
   "scripts": {
     "build": "tsc",

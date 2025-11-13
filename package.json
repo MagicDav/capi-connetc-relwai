@@ -1,7 +1,7 @@
 {
   "name": "expressjs-prisma",
   "version": "1.0.0",
-  "main": "dist/index.j",
+  "main": "dist/index.js",
   "author": "Domingos Bernardo Kalepa",
   "license": "MIT",
   "scripts": {

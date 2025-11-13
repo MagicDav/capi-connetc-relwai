@@ -6,5 +6,5 @@ const router = express.Router();
 router.post("/cadastrar", cadastrarPassageiro);
 router.post("/validar", validarQRCode);
 
-
+ 
 export default router;

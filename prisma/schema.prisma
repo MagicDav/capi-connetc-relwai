@@ -19,3 +19,4 @@ model passageiros {
   status Boolean
   createdAt DateTime @default(now())
 }
+ 

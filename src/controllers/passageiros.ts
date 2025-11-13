@@ -59,7 +59,7 @@ export const validarQRCode = async (req: Request, res: Response) => {
 
     if (!passageiro) {
       arduino.write("0");
-      return res.status(404).json({ error: "QR Code não existe ou é inválido" });
+      return res.status(404).json({ error: "QR Code não existe ou é inválido" }); 
     }
 
     if (passageiro.status) {

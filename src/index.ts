@@ -32,7 +32,7 @@ app.get("/", async (req, res) => {
   </pre>
   `.trim(),
   );
-});
+}); 
 
 // Import and use passageiros routes
 app.use("/api/passageiros", passageirosRoutes);
